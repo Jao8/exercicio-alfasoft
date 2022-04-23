@@ -6,11 +6,15 @@ $title = $isEdit ? 'Edit Contact' : 'New Contact';
 @extends('layouts.app', ['title' => $title, 'class' => 'contact-form'])
 
 @section('content')
-
     <div class="contact-container">
         <div class="card">
-            <div class="card-header">
-                <p class="card-title d-flex justify-content-center">{{ $title }}</p>
+            <div class="card-header d-flex flex-row">
+                <div class="d-flex justify-content-start flex-fill">
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>
+                </div>
+                <div class="d-flex justify-content-start flex-fill">
+                    <p class="card-title">{{ $title }}</p>
+                </div>
             </div>
             <form action="{{ url('contact') }}" method="post">
                 <div class="card-body">
@@ -18,7 +22,7 @@ $title = $isEdit ? 'Edit Contact' : 'New Contact';
                     @method($isEdit ? "PUT":"POST")
                     @csrf()
 
-                    <input type="hidden" name="id" value="{{ isset($contact->id) ? $contact->id : ''}}">
+                    <input type="hidden" name="id" value="{{ isset($contact->id) ? $contact->id : '' }}">
 
                     <div class="form-floating mb-3">
                         <input type="text" name="name" class="form-control" id="name" placeholder="Insert a name"
@@ -28,7 +32,8 @@ $title = $isEdit ? 'Edit Contact' : 'New Contact';
 
                     <div class="form-floating mb-3">
                         <input type="contact" class="form-control" name="contact" id="contact"
-                            placeholder="Insert a contact" value="{{ isset($contact->contact) ? $contact->contact : '' }}">
+                            placeholder="Insert a contact"
+                            value="{{ isset($contact->contact) ? $contact->contact : '' }}">
                         <label for="contact">Contact</label>
                     </div>
 
@@ -40,7 +45,8 @@ $title = $isEdit ? 'Edit Contact' : 'New Contact';
 
                 </div>
                 <div class="card-footer d-flex flex-row-reverse">
-                    <button type="submit" class="btn btn-primary btn-lg btn-submit">{{ $isEdit ? 'Update' : 'Create' }}</button>
+                    <button type="submit"
+                        class="btn btn-primary btn-lg btn-submit">{{ $isEdit ? 'Update' : 'Create' }}</button>
                 </div>
             </form>
         </div>

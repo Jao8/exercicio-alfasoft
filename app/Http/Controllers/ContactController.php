@@ -47,14 +47,14 @@ class ContactController extends Controller
                 $this->save($request->all());
 
                 Session::flash('success', 'Contact added with success!');
-                return redirect('/contact', Response::HTTP_CREATED);
+                return redirect()->route('index');
             } catch (\Exception $e) {
                 $this->handleError();
             }
         }
 
         Session::flash('error', $validation->errors()->first());
-        return redirect('/contact');
+        return redirect()->route('index');
     }
 
     //Return the Contact Edit Page
@@ -79,10 +79,10 @@ class ContactController extends Controller
             $this->save($request->all());
 
             Session::flash('success', 'Contact updated with success!');
-            return redirect('/contact');
+            return redirect()->route('index');
         } else {
             Session::flash('error', $validation->errors()->first());
-            return redirect('/contact');
+            return redirect()->route('index');
         }
     }
 
@@ -100,13 +100,13 @@ class ContactController extends Controller
                 DB::commit();
 
                 Session::flash('success', 'Contact updated with success!');
-                return redirect('/contact');
+                return redirect()->route('index');
             } catch (\Exception $e) {
                 $this->handleError($e, true);
             }
         } else {
             Session::flash('error', $validation->errors()->first());
-            return redirect('/contact');
+            return redirect()->route('index');
         }
     }
 
@@ -163,6 +163,6 @@ class ContactController extends Controller
         }
 
         Session::flash('error', "Internal Error! Try Again Later");
-        return redirect('/contact');
+        return redirect()->route('index');
     }
 }

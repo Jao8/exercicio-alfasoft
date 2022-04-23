@@ -15,18 +15,18 @@ use App\Http\Controllers\ContactController;
 */
 
 //List all contacts
-Route::get('/contact', [ContactController::class, 'index']);
+Route::get('/contact', [ContactController::class, 'index'])->name('index');
 
 //Create Contact
-Route::get('/contact/create', [ContactController::class, 'create']);
+Route::get('/contact/create', [ContactController::class, 'create'])->name('create');
 Route::post('/contact', [ContactController::class, 'insert']);
 
 //Update Contact
-Route::get('/contact/{id}/edit', [ContactController::class, 'edit']);
+Route::get('/contact/{id}/edit', [ContactController::class, 'edit'])->name('edit');
 Route::put('/contact', [ContactController::class, 'update']);
 
 //Read Contact Details
-Route::get('/contact/{id}/info', [ContactController::class, 'read']);
+Route::get('/contact/{id}/info', [ContactController::class, 'read'])->name('info');
 
 //Delete contact
 Route::delete('/contact', [ContactController::class, 'delete']);

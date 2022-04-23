@@ -7,8 +7,13 @@ $title = 'Contacts';
 @section('content')
     <div class="contact-container">
         <div class="card">
-            <div class="card-header d-flex justify-content-center">
-                <p class="card-title">{{ $title }}</p>
+            <div class="card-header d-flex flex-row">
+                <div class="d-flex justify-content-end flex-fill">
+                    <p class="card-title">{{ $title }}</p>
+                </div>
+                <div class="d-flex justify-content-end flex-fill">
+                    <a href="{{ route('create') }}" class="btn btn-primary">Add Contact</a>
+                </div>
             </div>
             <div class="card-body">
                 @if (count($contacts))
@@ -30,9 +35,9 @@ $title = 'Contacts';
                                     <td class="text-center">{{ $c->email }}</td>
                                     <td class="text-center">{{ $c->contact }}</td>
                                     <td class="d-flex flex-row justify-content-center">
-                                        <a href="/contact/{{ $c->id }}/edit" class="btn btn-primary m-1"
+                                        <a href="{{ route('edit', $c->id) }}" class="btn btn-primary m-1"
                                             title="Edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                                        <a href="/contact/{{ $c->id }}/info" class="btn btn-primary m-1"
+                                        <a href="{{ route('info', $c->id) }}" class="btn btn-primary m-1"
                                             title="Show Contact Info"><i class="fa fa-eye" aria-hidden="true"></i>
                                         </a>
                                         <form action="{{ url('/contact') }}" method="post">
