@@ -19,6 +19,7 @@ class CreateContactsTable extends Migration
             $table->string('contact')->unique();
             $table->string('email')->unique();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

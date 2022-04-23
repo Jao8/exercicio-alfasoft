@@ -22,7 +22,10 @@ class ContactController extends Controller
     //List contacts
     public function index()
     {
-        # code...
+        $contacts = Contact::paginate(10);
+        return view('contact.index', [
+            'contacts' => $contacts
+        ]);
     }
 
     //Return the Contact Creation Page
@@ -46,13 +49,12 @@ class ContactController extends Controller
                 Session::flash('success', 'Contact added with success!');
                 return redirect('/contact', Response::HTTP_CREATED);
             } catch (\Exception $e) {
-                Session::flash('error', "Internal Error! Try Again Later");
-                return redirect('/contact', Response::HTTP_BAD_REQUEST);
+                $this->handleError();
             }
         }
 
         Session::flash('error', $validation->errors()->first());
-        return redirect('/contact', Response::HTTP_BAD_REQUEST);
+        return redirect('/contact');
     }
 
     //Return the Contact Edit Page
@@ -64,8 +66,7 @@ class ContactController extends Controller
                 'contact' => Contact::where('id', $id)->first()
             ]);
         }
-        Session::flash('error', "Internal Error! Try Again Later");
-        return redirect('/contact', Response::HTTP_BAD_REQUEST);
+        $this->handleError();
     }
 
     //Update Contact into the database
@@ -80,22 +81,44 @@ class ContactController extends Controller
             Session::flash('success', 'Contact updated with success!');
             return redirect('/contact');
         } else {
-            dd('aq2');
             Session::flash('error', $validation->errors()->first());
-            return redirect('/contact', Response::HTTP_BAD_REQUEST);
+            return redirect('/contact');
         }
     }
 
     //Delete the Contact from the database
     public function delete(Request $request)
     {
-        dd($request->all());
+        $validation = Validator::make($request->all(), [
+            'id' => 'required|numeric'
+        ]);
+        if (!$validation->fails()) {
+            try {
+                $contact = Contact::find($request->id);
+                DB::beginTransaction();
+                $contact->delete();
+                DB::commit();
+
+                Session::flash('success', 'Contact updated with success!');
+                return redirect('/contact');
+            } catch (\Exception $e) {
+                $this->handleError($e, true);
+            }
+        } else {
+            Session::flash('error', $validation->errors()->first());
+            return redirect('/contact');
+        }
     }
 
     //Return the Contact Details Page
     public function read($id)
     {
-        # code...
+        if (is_numeric($id)) {
+
+            return view('contact.info', [
+                'contact' => Contact::where('id', $id)->first()
+            ]);
+        }
     }
 
     //Validation Method for the create/edit form
@@ -124,10 +147,22 @@ class ContactController extends Controller
 
             DB::commit();
         } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e->getMessage());
-            Session::flash('error', "Internal Error! Try Again Later");
-            return redirect('/contact', Response::HTTP_BAD_REQUEST);
+            $this->handleError($e, true);
         }
+    }
+
+    //Handle errors Method
+    private function handleError(\Exception $exception = null, $rollBack = false)
+    {
+
+        if (isset($exception)) {
+            Log::error($exception->getMessage());
+        }
+        if ($rollBack) {
+            DB::rollBack();
+        }
+
+        Session::flash('error', "Internal Error! Try Again Later");
+        return redirect('/contact');
     }
 }
