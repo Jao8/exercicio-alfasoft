@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,18 +15,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 //List all contacts
-Route::get('/contacts', 'ContactController@index');
+Route::get('/contact', [ContactController::class, 'index']);
 
 //Create Contact
-Route::get('/contact/create', 'ContactController@create');
-Route::post('/contact', 'ContactController@insert');
+Route::get('/contact/create', [ContactController::class, 'create']);
+Route::post('/contact', [ContactController::class, 'insert']);
 
 //Update Contact
-Route::get('/contact/{id}/edit', 'ContactController@edit');
-Route::put('/contact', 'ContactController@update');
+Route::get('/contact/{id}/edit', [ContactController::class, 'edit']);
+Route::put('/contact', [ContactController::class, 'update']);
 
 //Read Contact Details
-Route::get('/contact/{id}/info', 'ContactController@read');
+Route::get('/contact/{id}/info', [ContactController::class, 'read']);
 
 //Delete contact
-Route::delete('/contact', 'ContactController@delete');
+Route::delete('/contact', [ContactController::class, 'delete']);
