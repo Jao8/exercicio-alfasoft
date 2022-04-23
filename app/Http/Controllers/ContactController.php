@@ -126,20 +126,24 @@ class ContactController extends Controller
     private function validation($data)
     {
         $validator = Validator::make($data, [
-            'id' => 'sometimes|required|numeric',
             'name' => 'required|string|min:5',
             'contact' => 'required|numeric|digits:9',
             'email' => 'required|email'
         ]);
 
-        $validator->sometimes('email', 'unique:contacts,email', function(){
-            return str_contains(url()->previous(), 'create');
+        $isEdit = str_contains(url()->previous(), 'edit');
+
+        $validator->sometimes('id', 'required|numeric', function() use ($isEdit){
+            return $isEdit;
         });
 
-        $validator->sometimes('contact', 'unique:contacts,contact', function(){
-            return str_contains(url()->previous(), 'create');
+        $validator->sometimes('email', 'unique:contacts,email', function() use ($isEdit){
+            return !$isEdit;
         });
 
+        $validator->sometimes('contact', 'unique:contacts,contact', function() use ($isEdit){
+            return !$isEdit;
+        });
         return $validator;
     }
 
