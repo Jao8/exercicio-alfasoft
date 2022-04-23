@@ -81,6 +81,7 @@ class ContactController extends Controller
             Session::flash('success', 'Contact updated with success!');
             return redirect()->route('index');
         } else {
+            dd($validation->errors());
             Session::flash('error', $validation->errors()->first());
             return redirect()->route('index');
         }
@@ -125,10 +126,19 @@ class ContactController extends Controller
     private function validation($data)
     {
         $validator = Validator::make($data, [
+            'id' => 'sometimes|required|numeric',
             'name' => 'required|string|min:5',
-            'contact' => 'required|numeric|digits:9|unique:contacts,contact',
-            'email' => 'required|email|unique:contacts,email'
+            'contact' => 'required|numeric|digits:9',
+            'email' => 'required|email'
         ]);
+
+        $validator->sometimes('email', 'unique:contacts,email', function(){
+            return str_contains(url()->previous(), 'create');
+        });
+
+        $validator->sometimes('contact', 'unique:contacts,contact', function(){
+            return str_contains(url()->previous(), 'create');
+        });
 
         return $validator;
     }
@@ -138,7 +148,6 @@ class ContactController extends Controller
     {
         try {
             $contact = isset($data['id']) ? Contact::where('id', $data["id"])->first() : new Contact();
-
             DB::beginTransaction();
             $contact->name = $data['name'];
             $contact->contact = $data['contact'];

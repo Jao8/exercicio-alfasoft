@@ -15,7 +15,7 @@ use App\Http\Controllers\ContactController;
 */
 
 //List all contacts
-Route::get('/contact', [ContactController::class, 'index'])->name('index');
+Route::get('/contacts', [ContactController::class, 'index'])->name('index');
 
 //Create Contact
 Route::get('/contact/create', [ContactController::class, 'create'])->name('create');
