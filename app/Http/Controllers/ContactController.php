@@ -53,8 +53,8 @@ class ContactController extends Controller
             }
         }
 
-        Session::flash('error', $validation->errors()->first());
-        return redirect()->route('index');
+        return redirect()->route('index')->withErrors($validation->errors()->first());
+
     }
 
     //Return the Contact Edit Page
@@ -82,8 +82,8 @@ class ContactController extends Controller
             return redirect()->route('index');
         } else {
             dd($validation->errors());
-            Session::flash('error', $validation->errors()->first());
-            return redirect()->route('index');
+            return redirect()->route('index')->withErrors($validation->errors()->first());
+
         }
     }
 
@@ -106,8 +106,7 @@ class ContactController extends Controller
                 $this->handleError($e, true);
             }
         } else {
-            Session::flash('error', $validation->errors()->first());
-            return redirect()->route('index');
+            return redirect()->route('index')->withErrors($validation->errors()->first());
         }
     }
 
@@ -175,7 +174,6 @@ class ContactController extends Controller
             DB::rollBack();
         }
 
-        Session::flash('error', "Internal Error! Try Again Later");
-        return redirect()->route('index');
+        return redirect()->route('index')->withErrors('Internal Error! Try Again Later');
     }
 }

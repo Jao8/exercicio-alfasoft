@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\loginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,19 +15,28 @@ use App\Http\Controllers\ContactController;
 |
 */
 
+//Set Root Path to contacts
+Route::redirect('/', '/contacts');
+
+Route::get('/login', [loginController::class, 'login'])->name('login');
+Route::post('/login', [loginController::class, 'authenticate']);
+
 //List all contacts
 Route::get('/contacts', [ContactController::class, 'index'])->name('index');
 
-//Create Contact
-Route::get('/contact/create', [ContactController::class, 'create'])->name('create');
-Route::post('/contact', [ContactController::class, 'insert']);
+Route::middleware(['auth'])->group(function () {
 
-//Update Contact
-Route::get('/contact/{id}/edit', [ContactController::class, 'edit'])->name('edit');
-Route::put('/contact', [ContactController::class, 'update']);
+    //Create Contact
+    Route::get('/contact/create', [ContactController::class, 'create'])->name('create');
+    Route::post('/contact', [ContactController::class, 'insert']);
 
-//Read Contact Details
-Route::get('/contact/{id}/info', [ContactController::class, 'read'])->name('info');
+    //Update Contact
+    Route::get('/contact/{id}/edit', [ContactController::class, 'edit'])->name('edit');
+    Route::put('/contact', [ContactController::class, 'update']);
 
-//Delete contact
-Route::delete('/contact', [ContactController::class, 'delete']);
+    //Read Contact Details
+    Route::get('/contact/{id}/info', [ContactController::class, 'read'])->name('info');
+
+    //Delete contact
+    Route::delete('/contact', [ContactController::class, 'delete']);
+});
